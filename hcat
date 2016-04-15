@@ -1,0 +1,9 @@
+#! /bin/sh
+#
+# this script is provided under GPL v3 or upper
+
+#echo $#
+for file in "$@";
+do
+    pygmentize -O style=colorful ${file}
+done
