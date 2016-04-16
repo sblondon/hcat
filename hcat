@@ -2,8 +2,21 @@
 #
 # this script is provided under GPL v3 or upper
 
-#echo $#
+MERGED_INPUTS_FILE=`tempfile`
+
 for file in "$@";
 do
-    pygmentize -O style=colorful ${file}
+    TEMP_FILE=`tempfile`
+    pygmentize -O style=colorful ${file} > ${TEMP_FILE} 2>/dev/null
+    if [ $? = 0 ]; then
+        cat ${TEMP_FILE} >> ${MERGED_INPUTS_FILE}
+        rm ${TEMP_FILE}
+    else
+        cat ${file} >> ${MERGED_INPUTS_FILE}
+    fi
 done
+
+
+cat ${MERGED_INPUTS_FILE}
+rm ${MERGED_INPUTS_FILE}
+
