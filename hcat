@@ -18,6 +18,14 @@ def display(data, lexer):
     else:
         print(data)
 
+def parse_stdin():
+    f = sys.stdin
+    data = f.read()
+    try:
+       lexer = guess_lexer(data)
+    except pygments.util.ClassNotFound:
+       lexer = None
+    return data, lexer
 
 if __name__ == '__main__':
     numbers_of_files = len(sys.argv) - 1
@@ -26,12 +34,7 @@ if __name__ == '__main__':
         for i in range(numbers_of_files):
             filename = sys.argv[i + OFFSET]
             if filename == "-":
-                f = sys.stdin
-                data = f.read()
-                try:
-                    lexer = guess_lexer(data)
-                except pygments.util.ClassNotFound:
-                    lexer = None
+                data, lexer = parse_stdin()
             else:
                 with open(filename) as f:
                     data = f.read()
@@ -44,11 +47,6 @@ if __name__ == '__main__':
                         lexer = None
             display(data, lexer)
     else:
-        f = sys.stdin
-        data = f.read()
-        try:
-            lexer = guess_lexer(data)
-        except pygments.util.ClassNotFound:
-            lexer = None
+        data, lexer = parse_stdin()
         display(data, lexer)
 
