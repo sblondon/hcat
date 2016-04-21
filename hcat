@@ -6,17 +6,24 @@ import sys
 
 import pygments
 
-from pygments.lexers import get_lexer_for_filename
-from pygments import highlight
+from pygments.lexers import get_lexer_for_filename, guess_lexer
 from pygments.formatters import Terminal256Formatter
-from pygments.lexers import guess_lexer
-from pygments.lexer import Lexer
 
-def display(data, lexer):
-    if lexer:
-        print highlight(data, lexer, Terminal256Formatter())
+
+def main():
+    numbers_of_files = len(sys.argv) - 1
+    if numbers_of_files:
+        OFFSET = 1
+        for i in range(numbers_of_files):
+            filename = sys.argv[i + OFFSET]
+            if filename == "-":
+                data, lexer = parse_stdin()
+            else:
+                data, lexer = parse_file(filename)
+            display(data, lexer)
     else:
-        print(data)
+        data, lexer = parse_stdin()
+        display(data, lexer)
 
 def parse_stdin():
     f = sys.stdin
@@ -27,26 +34,25 @@ def parse_stdin():
        lexer = None
     return data, lexer
 
-if __name__ == '__main__':
-    numbers_of_files = len(sys.argv) - 1
-    if numbers_of_files:
-        OFFSET = 1
-        for i in range(numbers_of_files):
-            filename = sys.argv[i + OFFSET]
-            if filename == "-":
-                data, lexer = parse_stdin()
-            else:
-                with open(filename) as f:
-                    data = f.read()
-                try:
-                    lexer = get_lexer_for_filename(filename)
-                except pygments.util.ClassNotFound:
-                    try:
-                        lexer = guess_lexer(data)
-                    except pygments.util.ClassNotFound:
-                        lexer = None
-            display(data, lexer)
+def parse_file(filename):
+    with open(filename) as f:
+        data = f.read()
+    try:
+        lexer = get_lexer_for_filename(filename)
+    except pygments.util.ClassNotFound:
+        try:
+            lexer = guess_lexer(data)
+        except pygments.util.ClassNotFound:
+            lexer = None
+    return data, lexer
+
+def display(data, lexer):
+    if lexer:
+        print(pygments.highlight(data, lexer, Terminal256Formatter()))
     else:
-        data, lexer = parse_stdin()
-        display(data, lexer)
+        print(data)
+
+
+if __name__ == '__main__':
+    main()
 
