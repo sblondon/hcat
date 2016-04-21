@@ -10,11 +10,13 @@ from pygments.lexers import get_lexer_for_filename
 from pygments import highlight
 from pygments.formatters import Terminal256Formatter
 from pygments.lexers import guess_lexer
-
+from pygments.lexer import Lexer
 
 def display(data, lexer):
-    print highlight(data, lexer, Terminal256Formatter())
-
+    if lexer:
+        print highlight(data, lexer, Terminal256Formatter())
+    else:
+        print(data)
 
 
 if __name__ == '__main__':
@@ -23,16 +25,30 @@ if __name__ == '__main__':
         OFFSET = 1
         for i in range(numbers_of_files):
             filename = sys.argv[i + OFFSET]
-            with open(filename) as f:
+            if filename == "-":
+                f = sys.stdin
                 data = f.read()
-            try:
-                lexer = get_lexer_for_filename(filename)
-            except pygments.util.ClassNotFound:
-                lexer = guess_lexer(data)
+                try:
+                    lexer = guess_lexer(data)
+                except pygments.util.ClassNotFound:
+                    lexer = None
+            else:
+                with open(filename) as f:
+                    data = f.read()
+                try:
+                    lexer = get_lexer_for_filename(filename)
+                except pygments.util.ClassNotFound:
+                    try:
+                        lexer = guess_lexer(data)
+                    except pygments.util.ClassNotFound:
+                        lexer = None
             display(data, lexer)
     else:
         f = sys.stdin
         data = f.read()
-        lexer = guess_lexer(data)
+        try:
+            lexer = guess_lexer(data)
+        except pygments.util.ClassNotFound:
+            lexer = None
         display(data, lexer)
 
