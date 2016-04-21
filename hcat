@@ -11,9 +11,9 @@ from pygments.formatters import Terminal256Formatter
 
 
 def main():
-    numbers_of_files = len(sys.argv) - 1
+    OFFSET = 1
+    numbers_of_files = len(sys.argv) - OFFSET
     if numbers_of_files:
-        OFFSET = 1
         for i in range(numbers_of_files):
             filename = sys.argv[i + OFFSET]
             if filename == "-":
