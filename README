@@ -1,0 +1,8 @@
+Highlighted cat
+===============
+
+
+Concatenate the input files to the standard output like cat. If the language of the input is detected, the output is highlighted.
+
+hcat requires pygments library.
+
