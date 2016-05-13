@@ -4,4 +4,5 @@ package:
 
 clean:
 	rm -rf dist hcat.egg-info
+	rm man/*.gz
 

@@ -1,8 +1,15 @@
 # -*- coding: utf-8 -*-
+import os
+import sys
 
 from setuptools import setup
 
 _NAME = "hcat"
+
+
+if len(sys.argv) >= 2 and sys.argv[1] == "sdist":
+    os.system('cd man/ && gzip -9c hcat.1 > hcat.1.gz')
+
 
 setup(
         name=_NAME,
@@ -13,7 +20,7 @@ setup(
         author_email="stephane.blondon@gmail.com",
         url="https://github.com/sblondon/" + _NAME,
         packages=[_NAME],
-        data_files=[("share/man/man1", ["hcat.1"])],
+        data_files=[("share/man/man1", ["man/hcat.1.gz"])],
         install_requires=[
             "pygments",
         ],
