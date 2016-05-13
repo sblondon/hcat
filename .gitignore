@@ -1,0 +1,3 @@
+dist
+hcat.egg-info
+man/*.gz
